@@ -1,0 +1,34 @@
+pipeline {
+    agent {label "ProjectA"}
+
+    stages {
+        stage('Stage1 Clone') {
+            steps {
+                echo 'Git Clone to Repositories'
+                git branch: 'main', url: 'https://github.com/ritheshacharyaa/Helloworld_latest.git'
+            }
+        }
+        stage('Stage2 Clone') {
+            steps {
+                echo 'Build the Project from Repositories'
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+        }
+        stage('Stage3 Deploy') {
+            steps {
+                echo 'Deploy the Project to Tomcat 1'
+                deploy adapters: [tomcat8(credentialsId: 'tomcatadmin23', path: '', url: 'http://54.255.214.109:8080/')], contextPath: null, war: '**/*.war'
+            }
+        }
+        stage('Stage4 Clone') {
+            steps {
+                echo 'Deploy the Project to Test Team 2'
+            }
+        } 
+        stage('Stage5 Clone') {
+            steps {
+                echo 'Deploy the Project to Production Server'
+            }
+        }                
+    }
+}
